@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; media-src 'self' file: blob:; img-src 'self' data: blob: file:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>BlurStudio</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header id="toolbar">
+    <div class="group">
+      <button id="btnOpen" title="باز کردن ویدیو (Ctrl+O)">📂 ویدیو</button>
+      <button id="btnLoadProj" title="باز کردن پروژه">پروژه ↥</button>
+      <button id="btnSaveProj" title="ذخیره پروژه (Ctrl+S)">پروژه ↧</button>
+    </div>
+    <div class="group tools" id="tools">
+      <button data-tool="select" title="انتخاب و جابجایی (V)">⬚ انتخاب</button>
+      <button data-tool="rect" class="active" title="مستطیل / مربع با Shift (R)">▭ مستطیل</button>
+      <button data-tool="ellipse" title="بیضی / دایره با Shift (E)">◯ بیضی</button>
+    </div>
+    <div class="group">
+      <label>حالت پیش‌فرض
+        <select id="defMode">
+          <option value="blur">بلور</option>
+          <option value="pixelate">پیکسلی</option>
+          <option value="color">رنگ</option>
+        </select>
+      </label>
+      <label>شدت <input id="defStrength" type="range" min="2" max="100" value="25" /><span id="defStrengthVal">25</span></label>
+      <input id="defColor" type="color" value="#000000" title="رنگ پیش‌فرض" />
+      <label>مدت پیش‌فرض <input id="defDur" type="number" min="0.5" step="0.5" value="5" style="width:52px" /> ثانیه</label>
+    </div>
+    <div class="group right">
+      <button id="btnUndo" title="برگشت (Ctrl+Z)">↶</button>
+      <button id="btnRedo" title="جلو (Ctrl+Y)">↷</button>
+      <select id="quality" title="کیفیت خروجی">
+        <option value="balanced">کیفیت: متعادل</option>
+        <option value="high" selected>کیفیت: بالا</option>
+        <option value="max">کیفیت: خیلی بالا</option>
+      </select>
+      <select id="encoder" title="انکودر خروجی">
+        <option value="auto">انکودر: خودکار (GPU)</option>
+        <option value="cpu">انکودر: CPU</option>
+      </select>
+      <button id="btnExport" class="primary">⬇ خروجی MP4</button>
+      <button id="btnPanel" title="نمایش/مخفی پنل (H)">☰</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="stage">
+      <video id="video" preload="auto"></video>
+      <canvas id="overlay"></canvas>
+      <div id="drop">
+        <div class="dropbox">
+          <div class="big">ویدیو را اینجا رها کنید</div>
+          <div class="small">یا روی «📂 ویدیو» بزنید · MP4 / MKV / MOV / WebM</div>
+        </div>
+      </div>
+    </section>
+
+    <aside id="panel">
+      <div class="tabs">
+        <button data-tab="manual" class="active">موارد <span id="count" class="badge">0</span></button>
+        <button data-tab="auto">تشخیص خودکار <span id="sCount" class="badge">0</span></button>
+      </div>
+      <div id="tabAuto" class="tabpane hidden">
+        <div class="auto-settings">
+          <div class="row"><label>دقت</label>
+            <select id="aInterval">
+              <option value="0.25">هر ۰٫۲۵ ثانیه (دقیق‌تر)</option>
+              <option value="0.5" selected>هر ۰٫۵ ثانیه</option>
+              <option value="1">هر ۱ ثانیه</option>
+              <option value="2">هر ۲ ثانیه (سریع‌تر)</option>
+            </select>
+          </div>
+          <div id="aCats" class="cats"></div>
+          <div class="row">
+            <button id="aStart" class="primary">🔍 شروع آنالیز</button>
+            <button id="aCancel" class="danger hidden">لغو</button>
+            <label class="chk"><input type="checkbox" id="aShow" checked /> نمایش روی ویدیو</label>
+          </div>
+          <div id="aProg" class="hidden"><div class="pbar"><div id="aBar"></div></div><div id="aInfo" class="muted mono"></div></div>
+        </div>
+        <div id="sList"></div>
+        <div class="auto-actions">
+          <label class="chk"><input type="checkbox" id="sAll" checked /> همه</label>
+          <label>حاشیه <input id="sPad" type="number" min="0" max="40" value="6" style="width:46px" />px</label>
+          <button id="sAdd" class="primary">افزودن انتخاب‌شده‌ها</button>
+        </div>
+      </div>
+      <div id="tabManual" class="tabpane">
+      <div id="list"></div>
+      <div id="details" class="hidden">
+        <div class="det-title">مورد <span id="dNum"></span> <span id="dShape" class="muted"></span></div>
+        <div class="row">
+          <label>شروع</label>
+          <input id="dStart" class="time" />
+          <button id="dSetStart" title="شروع = زمان فعلی (I)">⇤ اینجا</button>
+        </div>
+        <div class="row">
+          <label>پایان</label>
+          <input id="dEnd" class="time" />
+          <button id="dSetEnd" title="پایان = زمان فعلی (O)">اینجا ⇥</button>
+        </div>
+        <div class="row"><label>مدت</label><span id="dDur" class="muted"></span></div>
+        <div class="row">
+          <label>حالت</label>
+          <select id="dMode">
+            <option value="blur">بلور</option>
+            <option value="pixelate">پیکسلی</option>
+            <option value="color">رنگ</option>
+          </select>
+          <input id="dColor" type="color" />
+        </div>
+        <div class="row">
+          <label>شدت</label>
+          <input id="dStrength" type="range" min="2" max="100" />
+          <span id="dStrengthVal"></span>
+        </div>
+        <div class="row">
+          <label>شکل</label>
+          <select id="dShapeSel">
+            <option value="rect">مستطیل</option>
+            <option value="ellipse">بیضی</option>
+          </select>
+        </div>
+        <div class="row actions">
+          <button id="dGoStart">پرش به شروع</button>
+          <button id="dDup">کپی</button>
+          <button id="dDelete" class="danger">حذف</button>
+        </div>
+      </div>
+      </div>
+      <div class="help">
+        <b>میانبرها:</b> Space پخش · ←/→ یک فریم · Shift+←/→ یک ثانیه · I/O شروع/پایان · Del حذف · V/R/E ابزار · H پنل · Ctrl+Z برگشت · Ctrl+چرخ موس زوم تایم‌لاین
+      </div>
+    </aside>
+  </main>
+
+  <footer id="bottom">
+    <div id="transport">
+      <button id="btnPlay" title="پخش/توقف (Space)">▶</button>
+      <button id="tSetStart" class="edge" title="شروع مورد انتخاب‌شده = همین فریم (I)">⇤ شروع</button>
+      <button id="tSetEnd" class="edge" title="پایان مورد انتخاب‌شده = همین فریم (O)">پایان ⇥</button>
+      <span id="tCur" class="mono">00:00:00.000</span>
+      <input id="scrub" type="range" min="0" max="1000" step="0.001" value="0" />
+      <span id="tDur" class="mono">00:00:00.000</span>
+      <label class="zoom">زوم <input id="zoom" type="range" min="0" max="1000" value="0" /></label>
+      <button id="btnFit" title="کل ویدیو">⤢</button>
+    </div>
+    <div id="timeline">
+      <div id="tlInner">
+        <canvas id="ruler"></canvas>
+        <div id="tracks"></div>
+        <div id="playhead"></div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="modal" class="hidden">
+    <div class="modal-box">
+      <div id="mTitle">در حال ساخت خروجی…</div>
+      <div class="bar"><div id="mBar"></div></div>
+      <div id="mInfo" class="muted mono"></div>
+      <div class="modal-actions">
+        <button id="mOpen" class="hidden">نمایش در پوشه</button>
+        <button id="mCancel" class="danger">لغو</button>
+        <button id="mClose" class="hidden">بستن</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>

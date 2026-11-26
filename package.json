@@ -1,0 +1,77 @@
+{
+  "name": "blur-studio",
+  "productName": "BlurStudio",
+  "version": "0.2.0",
+  "description": "Minimal video redaction tool: draw shapes, set time ranges, blur / pixelate / color-fill, export with FFmpeg.",
+  "main": "main.js",
+  "author": "Sahand Farshad",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.sahand.blurstudio",
+    "productName": "BlurStudio",
+    "files": [
+      "main.js",
+      "preload.js",
+      "exporter.js",
+      "analyzer.js",
+      "ocr.js",
+      "sensitive.js",
+      "renderer/**",
+      "!node_modules/onnxruntime-node/bin/napi-v6/darwin/**",
+      "!node_modules/onnxruntime-node/bin/napi-v6/linux/**",
+      "!node_modules/onnxruntime-node/bin/napi-v6/win32/arm64/**"
+    ],
+    "extraResources": [
+      {
+        "from": "bin/ffmpeg.exe",
+        "to": "ffmpeg.exe"
+      },
+      {
+        "from": "bin/FFMPEG-LICENSE.txt",
+        "to": "FFMPEG-LICENSE.txt"
+      },
+      {
+        "from": "models",
+        "to": "models",
+        "filter": [
+          "det.onnx",
+          "rec.onnx",
+          "rec_dict.json"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "BlurStudio-${version}-portable.exe"
+    },
+    "asarUnpack": [
+      "analyzer.js",
+      "ocr.js",
+      "sensitive.js",
+      "node_modules/onnxruntime-node/**",
+      "node_modules/onnxruntime-common/**"
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "BlurStudio-${version}-setup.exe"
+    }
+  },
+  "dependencies": {
+    "onnxruntime-node": "1.23.2"
+  }
+}
