@@ -1,6 +1,6 @@
 {
   "name": "blur-studio",
-  "productName": "BlurStudio",
+  "productName": "Sahand Fast Blurer",
   "version": "0.2.0",
   "description": "Minimal video redaction tool: draw shapes, set time ranges, blur / pixelate / color-fill, export with FFmpeg.",
   "main": "main.js",
@@ -16,7 +16,7 @@
   },
   "build": {
     "appId": "com.sahand.blurstudio",
-    "productName": "BlurStudio",
+    "productName": "Sahand Fast Blurer",
     "files": [
       "main.js",
       "preload.js",
@@ -56,7 +56,7 @@
       "icon": "build/icon.ico"
     },
     "portable": {
-      "artifactName": "BlurStudio-${version}-portable.exe"
+      "artifactName": "Sahand-Fast-Blurer-${version}-portable.exe"
     },
     "asarUnpack": [
       "analyzer.js",
@@ -68,12 +68,12 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "artifactName": "BlurStudio-${version}-setup.exe",
+      "artifactName": "Sahand-Fast-Blurer-${version}-setup.exe",
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
       "installerHeaderIcon": "build/icon.ico",
       "createDesktopShortcut": true,
-      "shortcutName": "BlurStudio"
+      "shortcutName": "Sahand Fast Blurer"
     },
     "directories": {
       "buildResources": "build",

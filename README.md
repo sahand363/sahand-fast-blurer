@@ -1,6 +1,6 @@
-<p align="center"><img src="build/icon.png" width="160" alt="BlurStudio"></p>
+<p align="center"><img src="build/icon.png" width="160" alt="Sahand Fast Blurer"></p>
 
-<h1 align="center">BlurStudio</h1>
+<h1 align="center">Sahand Fast Blurer</h1>
 
 ابزار مینیمال برای بلور / پیکسلی / رنگی کردن بخش‌های حساس ویدیو (مخصوص ضبط‌های صفحه مثل OBS).
 

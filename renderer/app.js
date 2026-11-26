@@ -77,7 +77,7 @@ function redo() { if (!state.redo.length) return; state.undo.push(serialize()); 
 function loadVideo(p) {
   state.videoPath = p;
   video.src = window.api.fileUrl(p);
-  document.title = 'BlurStudio — ' + p.split(/[\\/]/).pop();
+  document.title = 'Sahand Fast Blurer — ' + p.split(/[\\/]/).pop();
 }
 video.addEventListener('loadedmetadata', () => {
   state.duration = video.duration; state.vw = video.videoWidth; state.vh = video.videoHeight;

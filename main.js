@@ -23,7 +23,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1440, height: 900, minWidth: 1000, minHeight: 640,
     backgroundColor: '#111317',
-    title: 'BlurStudio',
+    title: 'Sahand Fast Blurer',
     icon: path.join(__dirname, 'renderer', 'icon.png'),
     autoHideMenuBar: true,
     webPreferences: {
@@ -56,14 +56,14 @@ ipcMain.handle('open-video', async () => {
 });
 
 ipcMain.handle('save-project', async (_e, { defaultPath, data }) => {
-  const r = await dialog.showSaveDialog(win, { defaultPath, filters: [{ name: 'BlurStudio Project', extensions: ['blurproj'] }] });
+  const r = await dialog.showSaveDialog(win, { defaultPath, filters: [{ name: 'Sahand Fast Blurer Project', extensions: ['blurproj'] }] });
   if (r.canceled) return null;
   fs.writeFileSync(r.filePath, JSON.stringify(data, null, 2), 'utf8');
   return r.filePath;
 });
 
 ipcMain.handle('open-project', async () => {
-  const r = await dialog.showOpenDialog(win, { properties: ['openFile'], filters: [{ name: 'BlurStudio Project', extensions: ['blurproj', 'json'] }] });
+  const r = await dialog.showOpenDialog(win, { properties: ['openFile'], filters: [{ name: 'Sahand Fast Blurer Project', extensions: ['blurproj', 'json'] }] });
   if (r.canceled) return null;
   return { path: r.filePaths[0], data: JSON.parse(fs.readFileSync(r.filePaths[0], 'utf8')) };
 });
