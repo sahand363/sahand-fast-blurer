@@ -24,6 +24,7 @@ function createWindow() {
     width: 1440, height: 900, minWidth: 1000, minHeight: 640,
     backgroundColor: '#111317',
     title: 'BlurStudio',
+    icon: path.join(__dirname, 'renderer', 'icon.png'),
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

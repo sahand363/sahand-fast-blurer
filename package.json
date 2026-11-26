@@ -53,7 +53,7 @@
         "nsis",
         "portable"
       ],
-      "signAndEditExecutable": false
+      "icon": "build/icon.ico"
     },
     "portable": {
       "artifactName": "BlurStudio-${version}-portable.exe"
@@ -68,7 +68,16 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "artifactName": "BlurStudio-${version}-setup.exe"
+      "artifactName": "BlurStudio-${version}-setup.exe",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "createDesktopShortcut": true,
+      "shortcutName": "BlurStudio"
+    },
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
     }
   },
   "dependencies": {

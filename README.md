@@ -1,4 +1,6 @@
-# BlurStudio
+<p align="center"><img src="build/icon.png" width="160" alt="BlurStudio"></p>
+
+<h1 align="center">BlurStudio</h1>
 
 ابزار مینیمال برای بلور / پیکسلی / رنگی کردن بخش‌های حساس ویدیو (مخصوص ضبط‌های صفحه مثل OBS).
 
